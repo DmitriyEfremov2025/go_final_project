@@ -24,12 +24,12 @@ func StartingServer() error {
 	if portStr != "" { // Проверяем, задано ли значение переменной TODO_PORT.
 		parsedPort, err := strconv.Atoi(portStr) // Преобразуем строку в целое число.
 		if err != nil {
-			return fmt.Errorf("Ошибка: значение TODO_PORT '%s'. Используйте число от 1 до 65535.", portStr)
+			return fmt.Errorf("error: TODO_PORT value '%s'. Use a number between 1 and 65535.", portStr)
 		}
 
 		// Проверяем допустимый диапазон
 		if parsedPort < 1 || parsedPort > 65535 {
-			return fmt.Errorf("Ошибка: порт %d не входит в допустимый диапазон (1–65535)", parsedPort)
+			return fmt.Errorf("error: Port %d is not in the valid range (1-65535)", parsedPort)
 		}
 
 		port = parsedPort // Если все проверки пройдены, присваиваем переменной port значение parsedPort.

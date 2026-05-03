@@ -64,21 +64,21 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		writeJson(w, responseErr{Error: "Ошибка при чтении тела запроса"}, false)
+		writeJson(w, responseErr{Error: "error reading request body"}, false)
 		return
 	}
 
 	// Десериализация JSON
 	if err = json.Unmarshal(body, &task); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		writeJson(w, responseErr{Error: "Ошибка десериализации JSON"}, false)
+		writeJson(w, responseErr{Error: "JSON deserialization error"}, false)
 		return
 	}
 
 	// Проверка обязательного поля title
 	if task.Title == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		writeJson(w, responseErr{Error: "Название задачи не указано"}, false)
+		writeJson(w, responseErr{Error: "the task title is not specified"}, false)
 		return
 	}
 
@@ -94,7 +94,7 @@ func addTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := db.AddTask(&task)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		writeJson(w, responseErr{Error: "Ошибка при добавлении задачи в базу данных"}, false)
+		writeJson(w, responseErr{Error: "error adding task to database"}, false)
 		return
 	}
 

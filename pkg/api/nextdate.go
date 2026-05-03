@@ -24,12 +24,12 @@ func afterNow(date, now time.Time) bool {
 // Функцию принимает текущее время, начальную дату и правило повторения. Возвращает следующую дату или ошибку.
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	if repeat == "" { // проверка наличие пустой строки в параметре repeat
-		return "", errors.New("пустая строка")
+		return "", errors.New("empty line")
 	}
 	// Проверка преобразования dstart
 	dateStart, err := time.Parse(DateFormat, dstart)
 	if err != nil {
-		return "", errors.New("недопустимый формат времени")
+		return "", errors.New("invalid time format")
 	}
 
 	// проверка формата repeat
@@ -39,14 +39,14 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	switch ruleType {
 	case "d":
 		if len(parts) != 2 {
-			return "", errors.New("Неверный формат")
+			return "", errors.New("invalid format")
 		}
 		interval, err := strconv.Atoi(parts[1])
 		if err != nil || interval <= 0 {
-			return "", errors.New("Недопустимый интервал")
+			return "", errors.New("invalid interval")
 		}
 		if interval > 400 {
-			return "", errors.New("интервал превышает 400 дней")
+			return "", errors.New("the interval exceeds 400 days")
 		}
 
 		// Присваиваем переменной date значение начальной даты.
@@ -63,7 +63,7 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 
 	case "y": // Если тип правила - "y" (годы)
 		if len(parts) != 1 {
-			return "", errors.New("Неверный формат")
+			return "", errors.New("invalid format")
 		}
 
 		date := dateStart
@@ -76,13 +76,13 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 		return date.Format(DateFormat), nil
 
 	default:
-		return "", fmt.Errorf("Неподдерживаемое правило повтора: %s", ruleType)
+		return "", fmt.Errorf("unsupported repeat rule: %s", ruleType)
 	}
 }
 
 func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Метод не разрешен", http.StatusMethodNotAllowed)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -93,12 +93,12 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Проверяем параметр date
 	if dateStr == "" {
-		http.Error(w, "Параметр 'date' обязателен.", http.StatusBadRequest)
+		http.Error(w, "the 'date' parameter is required", http.StatusBadRequest)
 		return
 	}
 	// Проверяем параметр repeat
 	if repeat == "" {
-		http.Error(w, "Параметр 'repeat' обязателен.", http.StatusBadRequest)
+		http.Error(w, "the 'repeat' parameter is required", http.StatusBadRequest)
 		return
 	}
 
@@ -108,7 +108,7 @@ func nextDayHandler(w http.ResponseWriter, r *http.Request) {
 		var err error
 		now, err = time.Parse(DateFormat, nowStr)
 		if err != nil {
-			http.Error(w, "Недопустимый формат даты", http.StatusBadRequest)
+			http.Error(w, "invalid date format", http.StatusBadRequest)
 			return
 		}
 	} else {

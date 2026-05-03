@@ -6,8 +6,6 @@ import (
 	"github.com/DmitriyEfremov2025/go_final_project/pkg/db"
 )
 
-const TaskLimit = 50
-
 // Создаём структуру для формирования JSON с параметром task
 type responseTask struct {
 	Tasks []*db.Task `json:"tasks"`
@@ -18,7 +16,7 @@ type responseTask struct {
 func tasksHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверяем метод запроса
 	if r.Method != http.MethodGet {
-		writeJson(w, map[string]string{"error": "метод не разрешен"}, false)
+		writeJson(w, map[string]string{"error": "method not allowed"}, false)
 		return
 	}
 
@@ -26,7 +24,7 @@ func tasksHandler(w http.ResponseWriter, r *http.Request) {
 	search := r.URL.Query().Get("search")
 
 	// Получаем задачи с учётом поиска
-	tasks, err := db.Tasks(TaskLimit, search)
+	tasks, err := db.Tasks(db.TaskLimit, search)
 	if err != nil {
 		writeJson(w, map[string]string{"error": err.Error()}, false)
 		return

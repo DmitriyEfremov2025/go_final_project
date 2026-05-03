@@ -11,7 +11,8 @@ func main() {
 	// Подключаемся к базе данных
 	err := db.Init("scheduler.db")
 	if err != nil {
-		log.Fatalf("Ошибка подключения к базе данных: %v", err)
+		log.Printf("Ошибка подключения к базе данных: %v", err)
+		return
 	}
 
 	// Закрываем соединение с БД
@@ -20,6 +21,7 @@ func main() {
 	// Запускаем сервер
 	err = server.StartingServer()
 	if err != nil {
-		log.Fatalf("Ошибка при запуске сервера: %v", err)
+		log.Printf("Ошибка при запуске сервера: %v", err)
+		return
 	}
 }
